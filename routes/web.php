@@ -105,6 +105,7 @@ use App\Http\Controllers\SspayController;
 use App\Http\Controllers\SubscriptionPlanController;
 use App\Http\Controllers\TemplateController;
 use App\Http\Controllers\ToyyibpayPaymentController;
+use App\Http\Controllers\CompanyController;
 use Illuminate\Support\Facades\Artisan;
 
 // use App\Http\Controllers\PlanRequestController;
@@ -155,7 +156,13 @@ Route::group(['middleware' => ['verified']], function () {
 
 
     Route::get('/dashboard', [HomeController::class, 'index'])->middleware(['auth', 'XSS'])->name('dashboard');
-    Route::get('/home', [HomeController::class, 'index'])->name('home')->middleware(
+    // Route::get('/home', [HomeController::class, 'index'])->name('home')->middleware(
+    //     [
+    //         'auth',
+    //         'XSS',
+    //     ]
+    // );
+    Route::get('/home', [HomeController::class, 'superadmin_dashboard'])->name('home')->middleware(
         [
             'auth',
             'XSS',
@@ -1045,8 +1052,23 @@ Route::group(['middleware' => ['verified']], function () {
     Route::get('request_cancel/{id}', [PlanRequestController::class, 'cancelRequest'])->name('request.cancel')->middleware(['auth', 'XSS',]);
     // End Plan Request Module
 
+    //companies
+    Route::resource('companies', CompanyController::class)->middleware(
+        [
+            'auth',
+            'XSS',
+        ]
+    );
+
+    //companies end
+
     //subscrption plans
-    Route::resource('subscrption_plans', SubscriptionPlanController::class);
+    Route::resource('subscrption_plans', SubscriptionPlanController::class)->middleware(
+        [
+            'auth',
+            'XSS',
+        ]
+    );
      
     //end subscrption plans
     Route::post('change-password', [UserController::class, 'updatePassword'])->name('update.password');

@@ -100,8 +100,8 @@
 
             <!-- user-->
             @if (\Auth::user()->type == 'super admin')
-                <li class="dash-item">
-                    <a href="{{ route('user.index') }}" class="dash-link"><span class="dash-micon"><i
+                <li class="dash-item {{ str_contains(url()->current(), 'companies') ? 'active' : '' }}">
+                    <a href="{{ route('companies.index') }}" class="dash-link"><span class="dash-micon"><i
                                 class="ti ti-user"></i></span><span class="dash-mtext">{{ __('Companies') }}</span></a>
                 </li>
             @else
@@ -641,13 +641,13 @@
             @endif --}}
             @if (\Auth::user()->type == 'super admin')
                 {{-- @if (Gate::check('Manage Order')) --}}
-                <li class="dash-item ">
+                {{-- <li class="dash-item ">
                     <a href="{{ route('order.index') }}"
                         class="dash-link {{ request()->is('orders*') ? 'active' : '' }}"><span
                             class="dash-micon"><i class="ti ti-shopping-cart"></i></span><span
                             class="dash-mtext">{{ __('Order') }}</span></a>
 
-                </li>
+                </li> --}}
                 {{-- @endif --}}
             @endif
 
@@ -874,9 +874,9 @@ href="{{ route('competencies.index') }}">{{ __('Competencies') }}</a>
             @endif
             <!--constant-->
 
-            @if (\Auth::user()->type == 'super admin')
+           {{-- @if (\Auth::user()->type == 'super admin')
                 @include('landingpage::menu.landingpage')
-            @endif
+            @endif  --}}
 
             @if (Gate::check('Manage System Settings'))
                 <li class="dash-item ">
