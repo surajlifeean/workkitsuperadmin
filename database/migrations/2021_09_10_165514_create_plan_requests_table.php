@@ -13,15 +13,19 @@ class CreatePlanRequestsTable extends Migration
      */
     public function up()
     {
-        Schema::table('users', function (Blueprint $table){
-            $table->integer('requested_plan')->default(0)->after('plan_expire_date');
-        });
+        // Schema::table('users', function (Blueprint $table){
+        //     $table->integer('requested_plan')->default(0)->after('plan_expire_date');
+        // });
 
         Schema::create('plan_requests', function (Blueprint $table){
             $table->id();
-            $table->integer('user_id');
-            $table->integer('plan_id');
-            $table->string('duration', 20)->default('monthly');
+            $table->unsignedBigInteger('company_id')->nullable();
+            $table->unsignedBigInteger('transaction_id')->nullable();
+            $table->unsignedBigInteger('subs_plan_id')->nullable();
+            $table->date('start_date')->nullable();
+            $table->date('end_date')->nullable();
+            $table->string('is_offer_price', 1)->default('0');
+            $table->enum('status', ['pending', 'active', 'rejected', 'expired'])->default('pending');
             $table->timestamps();
         });
     }

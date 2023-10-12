@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('duration');
             $table->integer('offered_price');
             $table->string('active', 1)->default('1');
+            $table->string('is_offer_price', 1)->default('0');
             $table->integer('total_users');
             $table->date('start_date');
             $table->text('description');

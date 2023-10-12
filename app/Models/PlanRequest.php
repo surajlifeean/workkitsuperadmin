@@ -15,6 +15,7 @@ class PlanRequest extends Model
         'start_date',
         'end_date',
         'status',
+        'is_offer_price',
     ];
 
     public function plan()
