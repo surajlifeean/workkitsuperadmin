@@ -69,7 +69,7 @@
                         </tbody>
                     </table> --}}
 
-                    <div class="table-responsive p-3">
+                    <div class="p-3 table-responsive">
                         <table class="table" id="pc-dt-simple">
     
                             <thead>
@@ -112,7 +112,11 @@
                                         {{ ucfirst($plan_request->status) }}
                                     </td>
                                     <td>
-                                        
+                                       <a href="#" data-url="#" data-ajax-popup="true"
+                                             data-title="{{ __('Edit Company') }}" data-size="md" data-bs-toggle="tooltip" title=""
+                                             class="btn btn-sm btn-primary" data-bs-original-title="{{ __('Edit') }}">
+                                             <i class="ti ti-pencil"></i>
+                                        </a>
                                     </td>
                                 </tr>
                             @endforeach

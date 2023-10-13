@@ -156,18 +156,18 @@ Route::group(['middleware' => ['verified']], function () {
 
 
     Route::get('/dashboard', [HomeController::class, 'index'])->middleware(['auth', 'XSS'])->name('dashboard');
-    // Route::get('/home', [HomeController::class, 'index'])->name('home')->middleware(
-    //     [
-    //         'auth',
-    //         'XSS',
-    //     ]
-    // );
-    Route::get('/home', [HomeController::class, 'superadmin_dashboard'])->name('home')->middleware(
+    Route::get('/home', [HomeController::class, 'index'])->name('home')->middleware(
         [
             'auth',
             'XSS',
         ]
     );
+    // Route::get('/home', [HomeController::class, 'superadmin_dashboard'])->name('home')->middleware(
+    //     [
+    //         'auth',
+    //         'XSS',
+    //     ]
+    // );  
     Route::get('/home/getlanguvage', [HomeController::class, 'getlanguvage'])->name('home.getlanguvage');
 
     Route::group(
@@ -1069,7 +1069,9 @@ Route::group(['middleware' => ['verified']], function () {
             'XSS',
         ]
     );
-     
+    Route::post('subscription-plans-update/{id}', [SubscriptionPlanController::class, 'updateOfferPrice'])
+    ->name('update.offer.price');
+
     //end subscrption plans
     Route::post('change-password', [UserController::class, 'updatePassword'])->name('update.password');
 
