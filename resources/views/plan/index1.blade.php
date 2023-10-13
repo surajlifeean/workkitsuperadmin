@@ -23,15 +23,16 @@
     <div class="row">
 
         @foreach ($plans as $plan)
-            <div class="col-lg-3 col-md-4">
+            <div class=" col-lg-3 col-md-4">
                 <div class="card price-card price-1 wow animate__fadeInUp" data-wow-delay="0.2s"
-                    style="visibility: visible; animation-delay: 0.2s; animation-name: fadeInUp;">
-                    <div class="card-body ">
+                    style="visibility: visible; animation-delay: 0.2s; animation-name: fadeInUp; height: 90%; margin-top: 2.5rem;">
+                    <div class="card-body position-relative">
                         <span class="price-badge bg-primary">{{ $plan->plan }}</span>
 
-                        <div class="d-flex flex-row-reverse m-0 p-0 ">
+                        <div class="flex-row-reverse p-0 m-0 d-flex ">
                             @can('Edit Plan')
                                 <div class="action-btn bg-primary ms-2">
+                                    
                                     <a href="#" class="mx-3 btn btn-sm d-inline-flex align-items-center"
                                         data-ajax-popup="true" data-title="{{ __('Edit Plan') }}"
                                         data-url="{{ route('subscrption_plans.edit', $plan->id) }}" data-size="lg" data-bs-toggle="tooltip"
@@ -50,7 +51,9 @@
 
 
                         <span
-                            class="mb-4 f-w-600 p-price">{{ env('CURRENCY_SYMBOL') ? env('CURRENCY_SYMBOL') : '$' }}{{ number_format($plan->price) }}
+                            class="mb-4 f-w-600 p-price">{{ $plan->currency == 'USD' ? '$' : ($plan->currency == 'EUR' ? '€' : ($plan->currency == 'XOF' || $plan->currency == 'XAF' ? 'FCFA' : '')) }}
+                            <span style="{{ $plan->is_offer_price == 1 ? 'display:none;' : '' }}" id="price{{$plan->id}}">{{ number_format($plan->price) }}</span>
+                            <span style="{{ $plan->is_offer_price == 0 ? 'display:none;' : '' }}" id="offered_price{{$plan->id}}" >{{ number_format($plan->offered_price) }}</span>
                             <small class="text-sm">
                                 {{-- @dump($plan->duration)  --}}
                                 / {{
@@ -65,11 +68,12 @@
                                
                         </span>
 
+
                         <p class="mb-0">
                             {{ $plan->description }}
                         </p>
 
-                        <ul class="list-unstyled my-4">
+                        <ul class="my-4 list-unstyled">
                             <li>
                                 <span class="theme-avtar">
                                     <i class="text-primary ti ti-circle-plus"></i></span>
@@ -81,6 +85,7 @@
                                 {{ $plan->total_users == -1 ? __('Unlimited') : $plan->total_users - 1 }}
                                 {{ __('Employees') }}
                             </li>
+                           
                             {{-- <li>
                                 <span class="theme-avtar">
                                     <i class="text-primary ti ti-circle-plus"></i></span>
@@ -93,6 +98,10 @@
                                 {{ $plan->enable_chatgpt == 'on' ? __('Enable Chat GPT') : __('Disable Chat GPT') }}
                             </li> --}}
                         </ul>
+                        <div class="mt-4 form-check form-switch position-absolute" style="bottom: 10px; left: 10px;">
+                                          <input {{ $plan->is_offer_price == 1 ? 'checked' : '' }} class="form-check-input" onchange="handleOfferPrice('{{ $plan->id }}', this)" type="checkbox" id="flexSwitchCheckChecked{{$plan->id}}">
+                                          <label class="form-check-label" for="flexSwitchCheckChecked">{{ __('Offer Price') }}</label>
+                                    </div>
                         {{-- <div class="row d-flex justify-content-between">
                             @if (
                                 (!empty($admin_payment_setting) &&
@@ -122,7 +131,7 @@
                                     @if ($plan->id != \Auth::user()->plan && \Auth::user()->type != 'super admin')
                                         <div class="col-8">
                                             @if (!$plan->price == 0)
-                                                <div class="d-grid text-center">
+                                                <div class="text-center d-grid">
                                                     <a href="{{ route('stripe', \Illuminate\Support\Facades\Crypt::encrypt($plan->id)) }}"
                                                         class="btn btn-primary btn-sm d-flex justify-content-center align-items-center"
                                                         data-bs-toggle="tooltip" data-bs-placement="top"
@@ -185,7 +194,7 @@
                     <div class="card-body ">
                         <span class="price-badge bg-primary">{{ $plan->plan }}</span>
 
-                        <div class="d-flex flex-row-reverse m-0 p-0 ">
+                        <div class="flex-row-reverse p-0 m-0 d-flex ">
                             {{-- @can('Edit Plan')
                                 <div class="action-btn bg-primary ms-2">
                                     <a href="#" class="mx-3 btn btn-sm d-inline-flex align-items-center"
@@ -225,7 +234,7 @@
                             {{ $plan->description }}
                         </p>
 
-                        <ul class="list-unstyled my-4">
+                        <ul class="my-4 list-unstyled">
                             <li>
                                 <span class="theme-avtar">
                                     <i class="text-primary ti ti-circle-plus"></i></span>
@@ -278,7 +287,7 @@
                                     @if ($plan->id != \Auth::user()->plan && \Auth::user()->type != 'super admin')
                                         <div class="col-8">
                                             @if (!$plan->price == 0)
-                                                <div class="d-grid text-center">
+                                                <div class="text-center d-grid">
                                                     <a href="{{ route('stripe', \Illuminate\Support\Facades\Crypt::encrypt($plan->id)) }}"
                                                         class="btn btn-primary btn-sm d-flex justify-content-center align-items-center"
                                                         data-bs-toggle="tooltip" data-bs-placement="top"
@@ -332,4 +341,38 @@
             </div>
         @endforeach
     </div>
+
+    <script>
+    
+    function handleOfferPrice(planId, src) {
+        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+        // const planId = checkbox.dataset.id;
+        const isChecked = src.checked ? 1 : 0;
+        let price = document.getElementById('price'+planId);
+        let offered_price = document.getElementById('offered_price'+planId);
+          
+        console.log(isChecked)
+        fetch(`/Alsol/workkitsuperadmin/subscription-plans-update/${planId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': csrfToken,
+            },
+            body: JSON.stringify({ isOfferPrice: isChecked }),
+        })
+        .then(response => response.json())
+        .then(data => {
+               console.log(data);
+               if (isChecked == 1) {
+                price.style.display = 'none' 
+                offered_price.style.display = 'inline'
+               } else {
+                price.style.display = 'inline' 
+                offered_price.style.display = 'none'
+               } 
+            
+        })
+        .catch(error => console.error('Error:', error));
+    }
+</script>
 @endsection

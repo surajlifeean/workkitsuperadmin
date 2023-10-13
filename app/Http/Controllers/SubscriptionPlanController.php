@@ -13,12 +13,12 @@ class SubscriptionPlanController extends Controller
     {
         if (\Auth::user()->can('Manage Plan')) {
             $plans = SubscriptionPlan::where('active', 1)
-             ->orderBy('price', 'asc')
-             ->get();
-      
-             $not_active_plans = SubscriptionPlan::where('active', 0)
-             ->orderBy('price', 'asc')
-             ->get();
+                ->orderBy('price', 'asc')
+                ->get();
+
+            $not_active_plans = SubscriptionPlan::where('active', 0)
+                ->orderBy('price', 'asc')
+                ->get();
             return view('plan.index1', compact('plans', 'not_active_plans'));
         } else {
             return redirect()->back()->with('error', __('Permission denied.'));
@@ -28,7 +28,7 @@ class SubscriptionPlanController extends Controller
     public function create()
     {
         if (\Auth::user()->can('Create Plan')) {
-            $currency = ['USD' => 'USD'];
+            $currency = ['USD' => 'USD', 'EUR' => 'EUR', 'XOF' => 'XOF' , 'XAF' => 'XAF'];
             return view('plan.create1', compact('currency'));
         } else {
             return redirect()->back()->with('error', __('Permission denied.'));
@@ -57,10 +57,10 @@ class SubscriptionPlanController extends Controller
 
     public function edit($id)
     {
-       
+
         if (\Auth::user()->can('Edit Plan')) {
             $plan  = SubscriptionPlan::find($id);
-            $currency = ['USD' => 'USD'];
+            $currency = ['USD' => 'USD', 'EUR' => 'EUR', 'XOF' => 'XOF' , 'XAF' => 'XAF'];
             return view('plan.edit1', compact('plan', "currency"));
         } else {
             return redirect()->back()->with('error', __('Permission denied.'));
@@ -90,8 +90,17 @@ class SubscriptionPlanController extends Controller
         } else {
             return redirect()->back()->with('error', __('Permission denied.'));
         }
-      
+    }
 
+    public function updateOfferPrice(Request $request, $id)
+    {
+        $plan = SubscriptionPlan::findOrFail($id);
+        $plan->is_offer_price = $request->input('isOfferPrice');
+        if ($plan->save()) {
+            return response()->json(['success' => 'Offer price updated successfully']);
+        }else{
+            return response()->json(['status' => '500']);
+        }
 
     }
 }
