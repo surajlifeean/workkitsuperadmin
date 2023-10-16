@@ -107,6 +107,7 @@ use App\Http\Controllers\TemplateController;
 use App\Http\Controllers\ToyyibpayPaymentController;
 use App\Http\Controllers\CompanyController;
 use Illuminate\Support\Facades\Artisan;
+use App\Http\Controllers\TransactionController;
 
 // use App\Http\Controllers\PlanRequestController;
 
@@ -1061,7 +1062,15 @@ Route::group(['middleware' => ['verified']], function () {
     );
 
     //companies end
+    //transactions 
 
+    Route::resource('transactions', TransactionController::class)->middleware(
+        [
+            'auth',
+            'XSS',
+        ]
+    );
+    //transactions end 
     //subscrption plans
     Route::resource('subscrption_plans', SubscriptionPlanController::class)->middleware(
         [

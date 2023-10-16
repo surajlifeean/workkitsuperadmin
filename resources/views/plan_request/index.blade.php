@@ -112,9 +112,7 @@
                                         {{ ucfirst($plan_request->status) }}
                                     </td>
                                     <td>
-                                       <a href="#" data-url="#" data-ajax-popup="true"
-                                             data-title="{{ __('Edit Company') }}" data-size="md" data-bs-toggle="tooltip" title=""
-                                             class="btn btn-sm btn-primary" data-bs-original-title="{{ __('Edit') }}">
+                                       <a href="{{ route('transactions.show', $plan_request) }}">
                                              <i class="ti ti-pencil"></i>
                                         </a>
                                     </td>
