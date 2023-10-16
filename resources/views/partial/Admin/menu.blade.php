@@ -4,7 +4,7 @@
     $company_logo = \App\Models\Utility::GetLogo();
     $users = \Auth::user();
     $profile = \App\Models\Utility::get_file('uploads/avatar/');
-    $currantLang = $users->currentLanguage();
+    $currantLang = $users ? $users->currentLanguage() : '';
     $emailTemplate = App\Models\EmailTemplate::first();
 @endphp
 

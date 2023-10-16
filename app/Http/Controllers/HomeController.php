@@ -181,27 +181,44 @@ class HomeController extends Controller
 
     public function index()
     {
-        $paid_users = PlanRequest::where('status', 'active')
-            ->distinct('company_id')
-            ->count('company_id');
-        //    dd($paid_users);
+        if (Auth::check()) {
+            $paid_users = PlanRequest::where('status', 'active')
+                ->distinct('company_id')
+                ->count('company_id');
+            //    dd($paid_users);
 
-        $total_users = Company::count('id');
-        $total_orders = PlanRequest::count('id');
-        $total_order_amount = PlanRequest::leftJoin('subscription_plans', 'plan_requests.subs_plan_id', '=', 'subscription_plans.id')
-            ->sum(DB::raw('CASE WHEN subscription_plans.is_offer_price = 1 THEN subscription_plans.offered_price ELSE subscription_plans.price END'));
-        $total_plans = SubscriptionPlan::where('active', 1)->count('id');
-        $mostPurchasedPlan_id = PlanRequest::select('subs_plan_id', DB::raw('COUNT(subs_plan_id) as purchase_count'))
-            ->groupBy('subs_plan_id')
-            ->orderByDesc('purchase_count')
-            ->limit(1)
-            ->first();
+            $total_users = Company::count('id');
+            $total_orders = PlanRequest::count('id');
+            $total_order_amount = PlanRequest::leftJoin('subscription_plans', 'plan_requests.subs_plan_id', '=', 'subscription_plans.id')
+                ->sum(DB::raw('CASE WHEN subscription_plans.is_offer_price = 1 THEN subscription_plans.offered_price ELSE subscription_plans.price END'));
+            $total_plans = SubscriptionPlan::where('active', 1)->count('id');
+            $mostPurchasedPlan_id = PlanRequest::select('subs_plan_id', DB::raw('COUNT(subs_plan_id) as purchase_count'))
+                ->groupBy('subs_plan_id')
+                ->orderByDesc('purchase_count')
+                ->limit(1)
+                ->first();
             // dd($mostPurchasedPlan_id);
-        $mostPurchasedPlan = SubscriptionPlan::where('id', $mostPurchasedPlan_id->subs_plan_id)->select('plan', 'price', 'offered_price', 'is_offer_price')->first();
-       
-        $chartData = $this->getOrderChartPlanRequests(['duration' => 'week']);
+            $mostPurchasedPlan = SubscriptionPlan::where('id', $mostPurchasedPlan_id->subs_plan_id)->select('plan', 'price', 'offered_price', 'is_offer_price')->first();
 
-        return view('dashboard.super_admin', compact( 'chartData', 'paid_users', 'total_users', 'total_orders', 'total_order_amount', 'total_plans', 'mostPurchasedPlan'));
+            $chartData = $this->getOrderChartPlanRequests(['duration' => 'week']);
+
+            return view('dashboard.super_admin', compact('chartData', 'paid_users', 'total_users', 'total_orders', 'total_order_amount', 'total_plans', 'mostPurchasedPlan'));
+        } else {
+            if (!file_exists(storage_path() . "/installed")) {
+                header('location:install');
+                die;
+            } else {
+                $settings = Utility::settings();
+                if ($settings['display_landing_page'] == 'on' && \Schema::hasTable('landing_page_settings')) {
+                    $plans = Plan::get();
+                    $get_section = LandingPageSection::orderBy('section_order', 'ASC')->get();
+
+                    return view('landingpage::layouts.landingpage', compact('plans', 'get_section'));
+                } else {
+                    return redirect('login');
+                }
+            }
+        }
     }
 
     public function getOrderChart($arrParam)
