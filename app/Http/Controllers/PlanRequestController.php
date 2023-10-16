@@ -184,4 +184,8 @@ class PlanRequestController extends Controller
     public function show(PlanRequest $planRequest)
     {
     }
+
+    public function update(Request $request, $id){
+      
+    }
 }
