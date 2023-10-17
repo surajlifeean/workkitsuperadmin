@@ -22,10 +22,11 @@ class CreatePlanRequestsTable extends Migration
             $table->unsignedBigInteger('company_id')->nullable();
             $table->unsignedBigInteger('transaction_id')->nullable();
             $table->unsignedBigInteger('subs_plan_id')->nullable();
-            $table->date('start_date')->nullable();
-            $table->date('end_date')->nullable();
+            $table->timestamp('start_date')->nullable();
+            $table->timestamp('end_date')->nullable();
+            $table->timestamp('hold_date')->nullable();
             $table->string('is_offer_price', 1)->default('0');
-            $table->enum('status', ['pending', 'active', 'rejected', 'expired'])->default('pending');
+            $table->enum('status', ['pending', 'active', 'rejected', 'expired', 'hold'])->default('pending');
             $table->timestamps();
         });
     }

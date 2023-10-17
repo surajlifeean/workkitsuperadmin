@@ -17,7 +17,7 @@
     }else {
         $SITE_RTL = '';
     }
-?>
+?> 
 
 <!DOCTYPE html>
 <html lang="<?php echo e(str_replace('_', '-', app()->getLocale())); ?>" dir="<?php echo e($SITE_RTL == 'on' ? 'rtl' : ''); ?>">
@@ -97,7 +97,8 @@
     
 
     <meta name="url" content="<?php echo e(url('') . '/' . config('chatify.routes.prefix')); ?>"
-        data-user="<?php echo e(Auth::user()->id); ?>">
+      data-user="<?php echo e(auth()->user() ? auth()->user()->id : ''); ?>">
+
 
     <link rel='stylesheet' href='https://unpkg.com/nprogress@0.2.0/nprogress.css' />
 
@@ -138,7 +139,7 @@
                     <hr />
                     <div class="form-check form-switch">
                         <input type="checkbox" class="form-check-input" id="pcsetting1" checked />
-                        <label class="form-check-label f-w-600 pl-1" for="pcsetting1">Allow desktop
+                        <label class="pl-1 form-check-label f-w-600" for="pcsetting1">Allow desktop
                             notification</label>
                     </div>
                     <p class="text-muted ms-5">
@@ -146,31 +147,31 @@
                     </p>
                     <div class="form-check form-switch">
                         <input type="checkbox" class="form-check-input" id="pcsetting2" />
-                        <label class="form-check-label f-w-600 pl-1" for="pcsetting2">Store Cookie</label>
+                        <label class="pl-1 form-check-label f-w-600" for="pcsetting2">Store Cookie</label>
                     </div>
-                    <h6 class="mb-0 mt-5">
+                    <h6 class="mt-5 mb-0">
                         <i data-feather="save" class="me-2"></i>Application settings
                     </h6>
                     <hr />
                     <div class="form-check form-switch">
                         <input type="checkbox" class="form-check-input" id="pcsetting3" />
-                        <label class="form-check-label f-w-600 pl-1" for="pcsetting3">Backup Storage</label>
+                        <label class="pl-1 form-check-label f-w-600" for="pcsetting3">Backup Storage</label>
                     </div>
-                    <p class="text-muted mb-4 ms-5">
+                    <p class="mb-4 text-muted ms-5">
                         Automaticaly take backup as par schedule
                     </p>
                     <div class="form-check form-switch">
                         <input type="checkbox" class="form-check-input" id="pcsetting4" />
-                        <label class="form-check-label f-w-600 pl-1" for="pcsetting4">Allow guest to print
+                        <label class="pl-1 form-check-label f-w-600" for="pcsetting4">Allow guest to print
                             file</label>
                     </div>
-                    <h6 class="mb-0 mt-5">
+                    <h6 class="mt-5 mb-0">
                         <i data-feather="cpu" class="me-2"></i>System settings
                     </h6>
                     <hr />
                     <div class="form-check form-switch">
                         <input type="checkbox" class="form-check-input" id="pcsetting5" checked />
-                        <label class="form-check-label f-w-600 pl-1" for="pcsetting5">View other user chat</label>
+                        <label class="pl-1 form-check-label f-w-600" for="pcsetting5">View other user chat</label>
                     </div>
                     <p class="text-muted ms-5">Allow to show public user message</p>
                 </div>
@@ -252,11 +253,11 @@
         </div>
     </div>
 
-    <div class="position-fixed top-0 end-0 p-3" style="z-index: 99999">
-        <div id="liveToast" class="toast text-white  fade" role="alert" aria-live="assertive" aria-atomic="true">
+    <div class="top-0 p-3 position-fixed end-0" style="z-index: 99999">
+        <div id="liveToast" class="text-white toast fade" role="alert" aria-live="assertive" aria-atomic="true">
             <div class="d-flex">
                 <div class="toast-body"></div>
-                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+                <button type="button" class="m-auto btn-close btn-close-white me-2" data-bs-dismiss="toast"
                     aria-label="Close"></button>
             </div>
         </div>

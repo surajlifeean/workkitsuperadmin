@@ -8,6 +8,8 @@ use App\Models\PlanRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
+use DateTime;
 
 class PlanRequestController extends Controller
 {
@@ -21,18 +23,18 @@ class PlanRequestController extends Controller
 
         if (Auth::user()->type == 'super admin') {
             $plan_requests = PlanRequest::leftJoin('companies', 'plan_requests.company_id', '=', 'companies.id')
-            ->leftJoin('subscription_plans', 'plan_requests.subs_plan_id', '=', 'subscription_plans.id')
-            ->select(
-                'plan_requests.*',
-                'companies.name as company_name',
-                'companies.email as company_email',
-                'subscription_plans.plan',
-                'subscription_plans.total_users',
-                
-                'subscription_plans.duration'
-            )
-            ->get();
-        
+                ->leftJoin('subscription_plans', 'plan_requests.subs_plan_id', '=', 'subscription_plans.id')
+                ->select(
+                    'plan_requests.*',
+                    'companies.name as company_name',
+                    'companies.email as company_email',
+                    'subscription_plans.plan',
+                    'subscription_plans.total_users',
+
+                    'subscription_plans.duration'
+                )
+                ->get();
+
             // dd($plan_requests);
             return view('plan_request.index', compact('plan_requests'));
         } else {
@@ -149,7 +151,7 @@ class PlanRequestController extends Controller
                     }
                 } else {
                     // $user->update(['requested_plan' => '0']);
-                    
+
                     $user['requested_plan'] = 0;
                     $user->update();
 
@@ -180,12 +182,66 @@ class PlanRequestController extends Controller
 
         return redirect()->back()->with('success', __('Request Canceled Successfully.'));
     }
-    
+
     public function show(PlanRequest $planRequest)
     {
     }
 
-    public function update(Request $request, $id){
-      
+    public function update(Request $request, $id)
+    {
+        if (Auth::user()->type == 'super admin') {
+            $plan_request = PlanRequest::findOrfail($id);
+            // dd($request);
+            if ($request->status == 'hold' && $plan_request->end_date > now()) {
+                $plan_request->hold_date =  new DateTime();
+            }
+            if ($request->status == 'active') {
+                if ($plan_request->hold_date == null) {
+                    $plan_request->start_date = new DateTime($request->start_date);
+                    $plan_request->end_date = new DateTime(Carbon::parse($request->start_date)->addDays($request->days));
+                } else {
+
+                    if ($plan_request->end_date > now()) {
+
+                        $dateInterval = now()->diff($plan_request->hold_date);
+                        $add_days = $dateInterval->days;
+                        $add_hours = $dateInterval->h;
+                        $add_minutes = $dateInterval->i;
+                        $add_seconds = $dateInterval->s;
+
+                        $plan_request->end_date = Carbon::parse($plan_request->end_date)
+                            ->addDays($add_days)
+                            ->addHours($add_hours)
+                            ->addMinutes($add_minutes)
+                            ->addSeconds($add_seconds);
+                        // dd($plan_request);
+                    } else {
+                        $dateInterval = $plan_request->end_date->diff($plan_request->hold_date);
+                        $add_days = $dateInterval->days;
+                        $add_hours = $dateInterval->h;
+                        $add_minutes = $dateInterval->i;
+                        $add_seconds = $dateInterval->s;
+
+                        $plan_request->end_date = Carbon::parse(now())
+                            ->addDays($add_days)
+                            ->addHours($add_hours)
+                            ->addMinutes($add_minutes)
+                            ->addSeconds($add_seconds);
+                    }
+
+                    $plan_request->hold_date = null;
+                }
+            }
+            if ($request->status == 'rejected') {
+                $plan_request->hold_date = null;
+                $plan_request->start_date = null;
+                $plan_request->end_date = null;
+            }
+            $plan_request->status = $request->status;
+            $plan_request->save();
+            return redirect()->back()->with('success', 'Updated successfully');
+        } else {
+            return redirect()->back()->with('error', __('Permission Denied.'));
+        }
     }
 }

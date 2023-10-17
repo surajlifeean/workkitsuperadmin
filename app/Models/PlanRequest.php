@@ -14,6 +14,7 @@ class PlanRequest extends Model
         'subs_plan_id',
         'start_date',
         'end_date',
+        'hold_date',
         'status',
         'is_offer_price',
     ];

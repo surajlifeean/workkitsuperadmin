@@ -148,9 +148,11 @@
                                         {{ ucfirst($plan_request->status) }}
                                     </td>
                                     <td>
-                                        <a href="{{ route('companies.show', $company->id) }}" class="btn btn-sm btn-primary">
+                                        @isset($plan_request->transaction_id)
+                                        <a href="{{  route('transactions.show', $plan_request->transaction_id) }}" class="btn btn-sm btn-primary">
                                             <i class="ti ti-eye"></i>
                                         </a>
+                                        @endisset
                                     </td>
                                 </tr>
                                 @endforeach

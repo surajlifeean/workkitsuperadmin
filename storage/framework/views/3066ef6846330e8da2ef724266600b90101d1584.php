@@ -1,3 +1,4 @@
+
 <?php $__env->startSection('page-title'); ?>
     <?php echo e(__('Dashboard')); ?>
 
@@ -10,38 +11,39 @@
 
         <div class="row">
             <div class="col-lg-4 col-6">
-                <div class="card" style="height: 226px">
+                <div class="card" style="height: 250px">
                     <div class="card-body">
                         <div class="theme-avtar bg-primary">
                             <i class="ti ti-users"></i>
                         </div>
-                        <p class="text-muted text-sm mt-4 mb-2"><?php echo e(__('Total Users')); ?> : <?php echo e($user->total_user); ?></p>
+                        <p class="mt-4 mb-2 text-sm text-muted"><?php echo e(__('Total Users')); ?> : <?php echo e($total_users); ?></p>
                         <h6 class="mb-3"><?php echo e(__('Paid Users')); ?></h6>
-                        <h3 class="mb-0"><?php echo e($user['total_paid_user']); ?></h3>
+                        <h3 class="mb-0"><?php echo e($paid_users); ?></h3>
                     </div>
                 </div>
             </div>
             <div class="col-lg-4 col-6">
-                <div class="card" style="height: 226px">
+                <div class="card" style="height: 250px">
                     <div class="card-body">
                         <div class="theme-avtar bg-info">
                             <i class="ti ti-shopping-cart"></i>
                         </div>
-                        <p class="text-muted text-sm mt-4 mb-2"><?php echo e(__('Total Orders')); ?>:<?php echo e($user->total_orders); ?></p>
+                        <p class="mt-4 mb-2 text-sm text-muted"><?php echo e(__('Total Orders')); ?>:<?php echo e($total_orders); ?></p>
                         <h6 class="mb-3"><?php echo e(__('Total Order Amount')); ?></h6>
-                        <h3 class="mb-0"><?php echo e((!empty(env('CURRENCY_SYMBOL')) ? env('CURRENCY_SYMBOL') : '$') . $user['total_orders_price']); ?></h3>
+                        <h3 class="mb-0"><?php echo e((!empty(env('CURRENCY_SYMBOL')) ? env('CURRENCY_SYMBOL') : '$') . $total_order_amount); ?></h3>
                     </div>
                 </div>
             </div>
             <div class="col-lg-4 col-6">
-                <div class="card" style="height: 226px">
+                <div class="card" style="height: 250px">
                     <div class="card-body">
                         <div class="theme-avtar bg-warning">
                             <i class="ti ti-trophy"></i>
                         </div>
-                        <p class="text-muted text-sm mt-4 mb-2"><?php echo e(__('Total Plan')); ?>: <?php echo e($user['total_plan']); ?></p>
+                        <p class="mt-4 mb-2 text-sm text-muted"><?php echo e(__('Total Plan')); ?>: <?php echo e($total_plans); ?></p>
                         <h6 class="mb-3"><?php echo e(__('Most Purchase Plan')); ?></h6>
-                        <h3 class="mb-0"><?php echo e($user['most_purchese_plan']); ?></h3>
+                        <h3 class="mb-0"><?php echo e($mostPurchasedPlan->plan); ?></h3>
+                        <h6 class="mt-1 mb-0"><?php echo e($mostPurchasedPlan->is_offer_price == 0 ? (!empty(env('CURRENCY_SYMBOL')) ? env('CURRENCY_SYMBOL') : '$') . $mostPurchasedPlan->price : (!empty(env('CURRENCY_SYMBOL')) ? env('CURRENCY_SYMBOL') : '$') . $mostPurchasedPlan->offered_price); ?></h6>
                     </div>
                 </div>
             </div>

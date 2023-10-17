@@ -1070,6 +1070,7 @@ Route::group(['middleware' => ['verified']], function () {
             'XSS',
         ]
     );
+
     //transactions end 
     //subscrption plans
     Route::resource('subscrption_plans', SubscriptionPlanController::class)->middleware(

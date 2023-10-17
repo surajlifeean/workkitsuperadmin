@@ -4,7 +4,7 @@
     $company_logo = \App\Models\Utility::GetLogo();
     $users = \Auth::user();
     $profile = \App\Models\Utility::get_file('uploads/avatar/');
-    $currantLang = $users->currentLanguage();
+    $currantLang = $users ? $users->currentLanguage() : '';
     $emailTemplate = App\Models\EmailTemplate::first();
 ?>
 
@@ -100,8 +100,8 @@
 
             <!-- user-->
             <?php if(\Auth::user()->type == 'super admin'): ?>
-                <li class="dash-item">
-                    <a href="<?php echo e(route('user.index')); ?>" class="dash-link"><span class="dash-micon"><i
+                <li class="dash-item <?php echo e(str_contains(url()->current(), 'companies') ? 'active' : ''); ?>">
+                    <a href="<?php echo e(route('companies.index')); ?>" class="dash-link"><span class="dash-micon"><i
                                 class="ti ti-user"></i></span><span class="dash-mtext"><?php echo e(__('Companies')); ?></span></a>
                 </li>
             <?php else: ?>
@@ -628,13 +628,7 @@
             
             <?php if(\Auth::user()->type == 'super admin'): ?>
                 
-                <li class="dash-item ">
-                    <a href="<?php echo e(route('order.index')); ?>"
-                        class="dash-link <?php echo e(request()->is('orders*') ? 'active' : ''); ?>"><span
-                            class="dash-micon"><i class="ti ti-shopping-cart"></i></span><span
-                            class="dash-mtext"><?php echo e(__('Order')); ?></span></a>
-
-                </li>
+                
                 
             <?php endif; ?>
 
@@ -861,9 +855,7 @@ href="<?php echo e(route('competencies.index')); ?>"><?php echo e(__('Competenci
             <?php endif; ?>
             <!--constant-->
 
-            <?php if(\Auth::user()->type == 'super admin'): ?>
-                <?php echo $__env->make('landingpage::menu.landingpage', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
-            <?php endif; ?>
+           
 
             <?php if(Gate::check('Manage System Settings')): ?>
                 <li class="dash-item ">

@@ -1,3 +1,5 @@
+
+
 <?php $__env->startSection('page-title'); ?>
     <?php echo e(__('Manage Plan Request')); ?>
 
@@ -20,7 +22,7 @@
                     <div class="table-responsive">
                         
 
-                    <div class="table-responsive p-3">
+                    <div class="p-3 table-responsive">
                         <table class="table" id="pc-dt-simple">
     
                             <thead>
@@ -40,6 +42,8 @@
     
                             <tbody>
                                 <?php $__currentLoopData = $plan_requests; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $plan_request): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                
+
                                 <tr>
                                     <td><?php echo e($plan_request->company_id); ?></td>
                                     <td><?php echo e($plan_request->company_name); ?></td>
@@ -47,7 +51,6 @@
                                     <td><?php echo e($plan_request->total_users == -1 ? 'Unlimited' :  $plan_request->total_users); ?></td>
                                     <td><?php echo e($plan_request->total_users == -1 ? 'Unlimited' : $plan_request->total_users - 1); ?></td>
                                     <td>
-                                        
                                         <?php echo e($plan_request->duration > 1 && $plan_request->duration < 12 ?
                                                 ($plan_request->duration == 1 ? $plan_request->duration . ' month' :  $plan_request->duration . ' months'):
                                                 ($plan_request->duration >= 12 ?
@@ -60,6 +63,13 @@
                                     <td>
                                         <?php echo e(ucfirst($plan_request->status)); ?>
 
+                                    </td>
+                                    <td>
+                                        <?php if(isset($plan_request->transaction_id)): ?>
+                                        <a href="<?php echo e(route('transactions.show', $plan_request->transaction_id )); ?>">
+                                            <i class="ti ti-pencil"></i>
+                                        </a>
+                                        <?php endif; ?>
                                     </td>
                                 </tr>
                             <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
