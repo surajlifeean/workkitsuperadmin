@@ -35,6 +35,8 @@
                             </div>
                             <div class="col-lg-4 col-md-6">
                                 <h5 class="mb-4"><b>{!! __('Payment Details') !!}</b></h5>
+                                <p><b>{!! __('Transaction Id') !!}</b>: <a style="font-size: 9px; cursor: pointer;" id="transactionId" class="cursor-pointer" 
+                                    onclick="copyToClipboard()" title="copy">{{ $transaction['id'] ?? __('N/A') }}</a></p>
                                 <p><b>{{ __('Plan')}}</b>: {{ $plan_request->plan }}</p>
                                 <p><b>{{ __('Plan Price')}}</b>: {{ $plan_request->is_offer_price == 1 ? $plan_request->offered_price : $plan_request->price }}</p>
                                 <p><b>{!! __('Duration') !!}</b>: {{
@@ -46,15 +48,16 @@
                                  }}</p>
                                 <p><b>{!! __('Offer Price') !!}</b>: {{ $plan_request->is_offer_price == 1 ? 'Yes' : 'No' }}</p>
                                 <p><b>{!! __('Currency') !!}</b>: {{ strtoupper($transaction['currency']) ?? __('N/A') }}</p>
-                                <p><b>{!! __('Payment Link') !!}</b>: {{ $transaction['payment_link'] ?? __('N/A') }}</p>
-                                <p><b>{!! __('Payment Status') !!}</b>: {{ $transaction['payment_status'] ?? __('N/A') }}</p>
 
                             </div>
                             <div class="col-lg-4 col-md-6">
                                 <h5 class="mb-5"></h5>
+                                <p><b>{!! __('Payment Link') !!}</b>: {{ $transaction['payment_link'] ?? __('N/A') }}</p>
+                                <p><b>{!! __('Payment Status') !!}</b>: {{ $transaction['payment_status'] ?? __('N/A') }}</p>
                                 <p><b>{!! __('Status') !!}</b>: {{ $transaction['status'] ?? __('N/A') }}</p>
-                                <p><b>{!! __('Amount Subtotal') !!}</b>: {{ $transaction['amount_subtotal'] / 100 ?? __('N/A') }}</p>
-                                <p><b>{!! __('Amount Total') !!}</b>: {{ $transaction['amount_total'] / 100 ?? __('N/A') }}</p>
+                                <p><b>{!! __('Amount Subtotal') !!}</b>: {{ ( strtoupper($transaction['currency']) == 'XOF' || strtoupper($transaction['currency']) == 'XAF') ? $transaction['amount_subtotal'] : ( $transaction['amount_subtotal'] / 100 ?? __('N/A') ) }}</p>
+                                <p><b>{!! __('Amount Total') !!}</b>: {{ ( strtoupper($transaction['currency']) == 'XOF' || strtoupper($transaction['currency']) == 'XAF') ? $transaction['amount_total'] :  ( $transaction['amount_total'] / 100 ?? __('N/A') ) }}</p>
+                                
                             </div>
                         </div>
                     </div>
@@ -67,13 +70,92 @@
                         <h4>{{ __('Activate Plan') }}</h4>
                     </div>
                     <div class="card-body">
-                    {{ Form::model($plan_request, ['route' => ['plan_request.update', $plan_request->id], 'method' => 'PUT']) }}
+                        
+                            {{ Form::model($plan_request, ['route' => ['plan_request.update', $plan_request->id], 'method' => 'PUT']) }}
+                                <div class="row d-flex flex-wrap">
+                               
+                                     <div class="col-lg-4 col-md-6 col-12 my-2">
+                                        {{-- @dump($plan_request->status) --}}
+                                         {{ Form::label('status', 'Status') }}
+                                         @php
+                                             $statusOptions = [
+                                                 'active' => 'Activate',
+                                                 'rejected' => 'Reject',
+                                                 'hold' => 'Hold'
+                                             ];
+                                         
+                                             if ($plan_request->status == 'pending') {
+                                                 $statusOptions['pending'] = 'Pending';
+                                             }
+                                             if ($plan_request->status == 'active') {
+                                                $statusOptions['active'] = 'Activated';
+                                             }
+                                             if ($plan_request->status == 'rejected') {
+                                                $statusOptions = [];
+                                                $statusOptions['rejected'] = 'Rejected';
+                                             }
+                                           
+                                         @endphp
+                                         
+                                         {{ Form::select('status', $statusOptions, $plan_request->status, ["class" => "form-control", "name" => "status",
+                                         "readonly" => ( $plan_request->status == 'rejected' ) ? "readonly" : null]) }}
+                                      </div>
 
+                                     <div class="col-lg-4 col-md-6 col-12 my-2">
+                                         {{ Form::label('days', 'Number of Days') }}
+                                         {{ Form::number('days', ($plan_request->duration * 30), [
+                                            "class" => "form-control",
+                                            "name" => "days",
+                                            "placeholder" => "Exact no of days",
+                                            "readonly" => ($plan_request->status != 'pending') ? "readonly" : null
+                                        ]) }}
+                                        
+                                          <span style="font-weight: 600; font-size: 11px;">Ex: for 1 month package days can be 30 or 28 or 29 etc... ( Default 30 days per month)</span>
+                                     </div>
 
-                    {{ Form::close() }}
-
+                                     <div class="col-lg-4 col-md-6 col-12 my-2">
+                                         {{ Form::label('start_date', 'Start Date and Time') }}
+                                         {{ Form::datetimeLocal('start_date', ($plan_request->start_date ? $plan_request->start_date : now()->format('Y-m-d\TH:i')), ["class" => "form-control", "name" => "start_date", "placeholder" => "Select Start Date and Time",  
+                                         "readonly" => ($plan_request->start_date || $plan_request->status == 'rejected' ? "readonly" : null )
+                                         ]) }}
+                                     </div>
+                                     <div class="col-lg-4 col-md-6 col-12 my-2">
+                                        {{ Form::label('end_date', 'End Date and Time') }}
+                                        {{ Form::datetimeLocal('end_date', $plan_request->end_date, ["class" => "form-control", "name" => "start_date", "placeholder" => "Select Start Date and Time" , "readonly" => "readonly"]) }}
+                                    </div>
+                                    <div class="col-lg-4 col-md-6 col-12 my-2">
+                                        {{ Form::label('hold_date', 'Hold Date and Time') }}
+                                        {{ Form::datetimeLocal('hold_date', $plan_request->hold_date, ["class" => "form-control", "name" => "start_date", "placeholder" => "Select Start Date and Time" , "readonly" => "readonly"]) }}
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-4">
+                                        {{ Form::submit('Update', ["class" => "btn btn-primary", "onclick" => "return confirm('Are you sure you want to continue?')",
+                                         "disabled" => ($plan_request->status == 'rejected') ? "disabled" : null
+                                        ]) }}
+                                    </div>                                    
+                                </div>
+                            {{ Form::close() }}
+                         
                     </div>
                 </div>
             </div>
         </div>
+
+        <script>
+            function copyToClipboard() {
+                var textToCopy = document.getElementById('transactionId').innerText;
+        
+                var textarea = document.createElement('textarea');
+                textarea.value = textToCopy;
+                document.body.appendChild(textarea);
+        
+                textarea.select();
+                document.execCommand('copy');
+                
+                document.body.removeChild(textarea);
+        
+                // alert('Copied to clipboard: ' + textToCopy);
+            }
+        </script>
         @endsection

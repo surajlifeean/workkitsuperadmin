@@ -60,6 +60,7 @@ class CompanyController extends Controller
             ->leftJoin('subscription_plans', 'plan_requests.subs_plan_id', '=', 'subscription_plans.id')
             ->select(
                 'plan_requests.start_date',
+                'plan_requests.transaction_id',
                 'plan_requests.end_date',
                 'plan_requests.status',
                 'plan_requests.status as request_status',

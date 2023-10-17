@@ -89,6 +89,8 @@
     
                             <tbody>
                                 @foreach ($plan_requests as $plan_request)
+                                {{-- @dump($plan_request) --}}
+
                                 <tr>
                                     <td>{{ $plan_request->company_id }}</td>
                                     <td>{{ $plan_request->company_name }}</td>
@@ -96,7 +98,6 @@
                                     <td>{{ $plan_request->total_users == -1 ? 'Unlimited' :  $plan_request->total_users }}</td>
                                     <td>{{ $plan_request->total_users == -1 ? 'Unlimited' : $plan_request->total_users - 1 }}</td>
                                     <td>
-                                        {{-- {{ $plan_request->duration }} --}}
                                         {{
                                    
                                             $plan_request->duration > 1 && $plan_request->duration < 12 ?
@@ -112,9 +113,11 @@
                                         {{ ucfirst($plan_request->status) }}
                                     </td>
                                     <td>
-                                       <a href="{{ route('transactions.show', $plan_request) }}">
-                                             <i class="ti ti-pencil"></i>
+                                        @isset($plan_request->transaction_id)
+                                        <a href="{{ route('transactions.show', $plan_request->transaction_id ) }}">
+                                            <i class="ti ti-pencil"></i>
                                         </a>
+                                        @endisset
                                     </td>
                                 </tr>
                             @endforeach
