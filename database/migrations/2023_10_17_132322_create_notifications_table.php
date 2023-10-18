@@ -15,6 +15,11 @@ return new class extends Migration
     {
         Schema::create('notifications', function (Blueprint $table) {
             $table->id();
+            $table->string('title', 255)->nullable();
+            $table->text('message')->nullable();
+            $table->integer('company_id');
+            $table->string('is_seen', 1)->default('0');
+            $table->string('is_superadmin', 1)->default('0');
             $table->timestamps();
         });
     }
