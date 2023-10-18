@@ -70,7 +70,7 @@ class CompanyController extends Controller
                 'subscription_plans.price'
             )
             ->where('companies.id', $id)
-            ->orderByRaw("FIELD(plan_requests.status,  'active', 'pending', 'expired', 'rejected')")
+            ->orderByRaw("FIELD(plan_requests.status,  'active', 'pending', 'hold', 'expired', 'rejected')")
             ->get();
         // dd($companyInfo);
         return view('companies.show', compact('companyInfo', 'company'));

@@ -49,11 +49,11 @@ class XSS
                 $Modulemigrations = glob(base_path() . '/Modules/LandingPage/Database' . DIRECTORY_SEPARATOR . 'Migrations' . DIRECTORY_SEPARATOR . '*.php');
                 $numberOfUpdatesPending = (count($migrations) + count($Modulemigrations) + $messengerMigration) - count($dbMigrations);
 
-                if ($numberOfUpdatesPending > 0) {
-                    // run code like seeder only when new migration
-                    Utility::addNewData();
-                    return redirect()->route('LaravelUpdater::welcome');
-                }
+                // if ($numberOfUpdatesPending > 0) {
+                //     // run code like seeder only when new migration
+                //     Utility::addNewData();
+                //     return redirect()->route('LaravelUpdater::welcome');
+                // }
             }
         }
 

@@ -33,6 +33,7 @@ class PlanRequestController extends Controller
 
                     'subscription_plans.duration'
                 )
+                ->orderBy('plan_requests.created_at', 'desc')
                 ->get();
 
             // dd($plan_requests);
