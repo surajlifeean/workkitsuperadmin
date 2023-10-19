@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\SubscriptionPlanController;
+use App\Http\Controllers\NotificationController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -20,3 +21,5 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::resource('subscription-plans', SubscriptionPlanController::class);
+
+Route::post('get_clients_notifications', [NotificationController::class, 'get_clients_notifications']);

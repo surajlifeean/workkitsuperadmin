@@ -18,5 +18,7 @@ class VerifyCsrfToken extends Middleware
         'iyzipay/callback/*',
         'paytab-success/*',
         '/aamarpay*',
+        '/notifications_from_clients',
+        '/Alsol/workkitsuperadmin/update-all-seen'
     ];
 }

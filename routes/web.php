@@ -106,6 +106,7 @@ use App\Http\Controllers\SubscriptionPlanController;
 use App\Http\Controllers\TemplateController;
 use App\Http\Controllers\ToyyibpayPaymentController;
 use App\Http\Controllers\CompanyController;
+use App\Http\Controllers\NotificationController;
 use Illuminate\Support\Facades\Artisan;
 use App\Http\Controllers\TransactionController;
 
@@ -1080,7 +1081,7 @@ Route::group(['middleware' => ['verified']], function () {
         ]
     );
     Route::post('subscription-plans-update/{id}', [SubscriptionPlanController::class, 'updateOfferPrice'])
-    ->name('update.offer.price');
+        ->name('update.offer.price');
 
     //end subscrption plans
     Route::post('change-password', [UserController::class, 'updatePassword'])->name('update.password');
@@ -1140,6 +1141,17 @@ Route::group(['middleware' => ['verified']], function () {
             'XSS',
         ]
     );
+    Route::resource('notifications', NotificationController::class)->middleware(
+        [
+            'auth',
+            'XSS',
+        ]
+    );
+    
+    Route::get('notifications_from_clients', [NotificationController::class, "index"]);
+    Route::post('update-all-seen', [NotificationController::class, "update_all_seen"]);
+    Route::post('notifications_broadcast', [NotificationController::class, "broadcast_message"])->name('notifications.broadcast');
+
     Route::get('notification-templates/{id?}/{lang?}/', [NotificationTemplatesController::class, 'index'])->name('notification-templates.index')->middleware(['auth', 'XSS']);
 
     Route::resource('trainingtype', TrainingTypeController::class)->middleware(

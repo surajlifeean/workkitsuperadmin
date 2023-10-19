@@ -14,6 +14,12 @@
             </div>
         </div>
         <div class="form-group">
+            {{ Form::label('url', __('Url'), ['class' => 'form-label']) }}
+            <div class="form-icon-user">
+                {!! Form::text('url', isset($company) ? $company->url : null, ['class' => 'form-control', 'required' => 'required', 'placeholder' => 'Enter Url']) !!}
+            </div>
+        </div>
+        <div class="form-group">
             {{ Form::label('mobile', __('Mobile'), ['class' => 'form-label']) }}
             <div class="form-icon-user">
                 {!! Form::text('mobile', isset($company) ? $company->mobile : null, ['class' => 'form-control', 'placeholder' => 'Enter Mobile']) !!}
@@ -22,7 +28,7 @@
         <div class="form-group">
             {{ Form::label('password', __('Password'), ['class' => 'form-label']) }}
             <div class="form-icon-user">
-                {!! Form::password('password', ['class' => 'form-control', 'placeholder' => 'Enter Password', 'required' => 'required', 'id' => 'password-input']) !!}
+                {!! Form::password('password', ['class' => 'form-control', 'placeholder' => 'Enter Password', 'id' => 'password-input']) !!}
 
                 <span class="cursor-pointer toggle-password" onclick="togglePasswordVisibility()">Show</span>
 

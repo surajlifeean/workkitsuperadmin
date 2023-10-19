@@ -43,6 +43,7 @@ class CompanyController extends Controller
             'email' => $request->input('email'),
             'mobile' => $request->input('mobile'),
             'password' => $hashedPassword,
+            'url' => $request->url
         ]);
 
         // Redirect or return a response as needed
@@ -110,7 +111,7 @@ class CompanyController extends Controller
             // Encrypt and update the password
             $company->password = bcrypt($request->input('password'));
         }
-
+        $company->url = $request->url;
         // Save the changes
         $company->save();
 
