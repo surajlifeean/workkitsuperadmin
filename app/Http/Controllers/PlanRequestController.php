@@ -2,14 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Company;
 use App\Models\Order;
 use App\Models\Plan;
 use App\Models\PlanRequest;
+use App\Models\SubscriptionPlan;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use DateTime;
+use Illuminate\Support\Facades\Http;
 
 class PlanRequestController extends Controller
 {
@@ -240,6 +243,22 @@ class PlanRequestController extends Controller
             }
             $plan_request->status = $request->status;
             $plan_request->save();
+
+            $url = Company::where('id', $plan_request->company_id)->select('url')->first();
+            $total_user = SubscriptionPlan::where('id', $plan_request->subs_plan_id)->select('total_users')->first();
+            $url = $url->url . '/api/active_plan_update';
+            // dd($url);
+            $send_updates = Http::post($url, [
+                '_token' => csrf_token(),
+                "subs_plan_id" => $plan_request->subs_plan_id,
+                "plan_request_id" => $plan_request->id,
+                "total_users" => $total_user->total_users,
+                "status" => $plan_request->status,
+                "start_date" => $plan_request->start_date,
+                "end_date" => $plan_request->end_date,
+            ]);
+            // return $send_updates;
+
             return redirect()->back()->with('success', 'Updated successfully');
         } else {
             return redirect()->back()->with('error', __('Permission Denied.'));
