@@ -1149,6 +1149,8 @@ Route::group(['middleware' => ['verified']], function () {
     );
     
     Route::get('notifications_from_clients', [NotificationController::class, "index"]);
+    // Route::get('notifications_show/{id}', [NotificationController::class, "show"]);
+
     Route::post('update-all-seen', [NotificationController::class, "update_all_seen"]);
     Route::post('notifications_broadcast', [NotificationController::class, "broadcast_message"])->name('notifications.broadcast');
 

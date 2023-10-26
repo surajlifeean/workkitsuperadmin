@@ -19,7 +19,7 @@ class NotificationController extends Controller
             $notifications = Notification::where('is_seen', 0)
                 ->where('is_superadmin', 0)
                 ->leftJoin('companies', 'notifications.company_id', '=', 'companies.id')
-                ->select('notifications.title', 'notifications.message', 'notifications.company_id','companies.email', 'companies.name as company_name', 'notifications.created_at')
+                ->select('companies.id','notifications.title', 'notifications.message', 'notifications.company_id','companies.email', 'companies.name as company_name', 'notifications.created_at')
                 ->get();
 
         //    dd('edrfgyjio');
@@ -57,7 +57,7 @@ class NotificationController extends Controller
         ->leftJoin('companies', 'notifications.company_id', '=', 'companies.id')
         ->select('notifications.title', 'notifications.message', 'notifications.company_id', 'notifications.is_superadmin','companies.email', 'companies.name as company_name', 'notifications.created_at')
         ->get();
-        
+        // dd($notifications);
         return view('notification.show', compact('notifications'));
     }
     public function get_clients_notifications(Request $request)
