@@ -224,7 +224,7 @@ $unseen_count = DB::select('SELECT from_id, COUNT(*) AS totalmasseges FROM ch_me
             const csrfToken = $('meta[name="csrf-token"]').attr('content');
 
             $.ajax({
-                url: '/Alsol/workkitsuperadmin/notifications_from_clients',
+                url: '/notifications_from_clients',
                 method: 'GET',
                 headers: {
                     _token: "{{ csrf_token() }}",
@@ -246,7 +246,7 @@ $unseen_count = DB::select('SELECT from_id, COUNT(*) AS totalmasseges FROM ch_me
                         const formattedDate = new Date(data[i].created_at).toLocaleString();
 
                         $('#notifibody').append(`
-                           <a class="py-2 cursor-pointer d-flex flex-column" href="" style="border-bottom: 1px solid black;">
+                           <a class="py-2 cursor-pointer d-flex flex-column" href="/notifications/${data[i].id}" style="border-bottom: 1px solid black;">
                               <h4>${data[i].company_name} <small style="font-size: 9px;">(${data[i].email})</small></h4>
                               <h5>${data[i].title}...</h5>
                               <p class="m-0">${data[i].message}...</p>
