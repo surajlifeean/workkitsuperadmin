@@ -321,6 +321,10 @@
                                 class="list-group-item list-group-item-action border-0">{{ __('Cookie Consent Settings') }}
                                 <div class="float-end"><i class="ti ti-chevron-right"></i></div>
                             </a>
+                            <a href="#Time_zone_setting" id="Time-zone-tab"
+                                class="list-group-item list-group-item-action border-0">{{ __('Time Zone Settings') }}
+                                <div class="float-end"><i class="ti ti-chevron-right"></i></div>
+                            </a>
                             <a href="#pills-chatgpt-settings" id="chatgpt-tab"
                                 class="list-group-item list-group-item-action border-0">{{ __('Chat GPT Key Settings') }}
                                 <div class="float-end"><i class="ti ti-chevron-right"></i></div>
@@ -3027,6 +3031,30 @@
                         {{ Form::close() }}
                     </div>
 
+                    {{-- ChatGPT Key Settings --}}
+                    <div class="card" id="Time_zone_setting">
+                        {{ Form::model($settings, ['route' => 'settings.chatgptkey', 'method' => 'post']) }}
+                        <div class="card-header">
+                            <h5>{{ __('Time Zone Settings') }}</h5>
+                           
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="form-group col-12">
+                                    {{ Form::label('Country', __('Country'), ['class' => 'col-form-label']) }}
+                                    {{ Form::text('country', isset($settings['country']) ? $settings['country'] : '', ['class' => 'form-control col-md-6', 'placeholder' => __('Enter Chatgpt Key Here')]) }}
+                                    
+                                    {{ Form::label('Time Zone', __('Time Zone'), ['class' => 'col-form-label']) }}
+                                    {{ Form::text('time_zone', isset($settings['time_zone']) ? $settings['time_zone'] : '', ['class' => 'form-control col-md-6', 'placeholder' => __('Enter Chatgpt Key Here')]) }}
+                                    
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer text-end">
+                            <button class="btn btn-primary" type="submit">{{ __('Save Changes') }}</button>
+                        </div>
+                        {{ Form::close() }}
+                    </div>
                     {{-- ChatGPT Key Settings --}}
                     <div class="card" id="pills-chatgpt-settings">
                         {{ Form::model($settings, ['route' => 'settings.chatgptkey', 'method' => 'post']) }}
