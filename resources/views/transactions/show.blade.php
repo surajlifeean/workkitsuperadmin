@@ -72,9 +72,9 @@
                     <div class="card-body">
                         
                             {{ Form::model($plan_request, ['route' => ['plan_request.update', $plan_request->id], 'method' => 'PUT']) }}
-                                <div class="row d-flex flex-wrap">
+                                <div class="flex-wrap row d-flex">
                                
-                                     <div class="col-lg-4 col-md-6 col-12 my-2">
+                                     <div class="my-2 col-lg-4 col-md-6 col-12">
                                         {{-- @dump($plan_request->status) --}}
                                          {{ Form::label('status', 'Status') }}
                                          @php
@@ -101,7 +101,7 @@
                                          "readonly" => ( $plan_request->status == 'rejected' ) ? "readonly" : null]) }}
                                       </div>
 
-                                     <div class="col-lg-4 col-md-6 col-12 my-2">
+                                     <div class="my-2 col-lg-4 col-md-6 col-12">
                                          {{ Form::label('days', 'Number of Days') }}
                                          {{ Form::number('days', ($plan_request->duration * 30), [
                                             "class" => "form-control",
@@ -113,19 +113,19 @@
                                           <span style="font-weight: 600; font-size: 11px;">Ex: for 1 month package days can be 30 or 28 or 29 etc... ( Default 30 days per month)</span>
                                      </div>
 
-                                     <div class="col-lg-4 col-md-6 col-12 my-2">
+                                     <div class="my-2 col-lg-4 col-md-6 col-12">
                                          {{ Form::label('start_date', 'Start Date and Time') }}
-                                         {{ Form::datetimeLocal('start_date', ($plan_request->start_date ? $plan_request->start_date : now()->format('Y-m-d\TH:i')), ["class" => "form-control", "name" => "start_date", "placeholder" => "Select Start Date and Time",  
+                                         {{ Form::datetimeLocal('start_date', ($plan_request->start_date ? \Carbon\Carbon::parse($plan_request->start_date)->timezone('Europe/Paris')->format('Y-m-d\TH:i') : now()->format('Y-m-d\TH:i')), ["class" => "form-control", "name" => "start_date", "placeholder" => "Select Start Date and Time",  
                                          "readonly" => ($plan_request->start_date || $plan_request->status == 'rejected' ? "readonly" : null )
                                          ]) }}
                                      </div>
-                                     <div class="col-lg-4 col-md-6 col-12 my-2">
+                                     <div class="my-2 col-lg-4 col-md-6 col-12">
                                         {{ Form::label('end_date', 'End Date and Time') }}
-                                        {{ Form::datetimeLocal('end_date', $plan_request->end_date, ["class" => "form-control", "name" => "start_date", "placeholder" => "Select Start Date and Time" , "readonly" => "readonly"]) }}
+                                        {{ Form::datetimeLocal('end_date', \Carbon\Carbon::parse($plan_request->end_date)->timezone('Europe/Paris')->format('Y-m-d\TH:i'), ["class" => "form-control", "name" => "start_date", "placeholder" => "Select Start Date and Time" , "readonly" => "readonly"]) }}
                                     </div>
-                                    <div class="col-lg-4 col-md-6 col-12 my-2">
+                                    <div class="my-2 col-lg-4 col-md-6 col-12">
                                         {{ Form::label('hold_date', 'Hold Date and Time') }}
-                                        {{ Form::datetimeLocal('hold_date', $plan_request->hold_date, ["class" => "form-control", "name" => "start_date", "placeholder" => "Select Start Date and Time" , "readonly" => "readonly"]) }}
+                                        {{ Form::datetimeLocal('hold_date', \Carbon\Carbon::parse($plan_request->hold_date)->timezone('Europe/Paris')->format('Y-m-d\TH:i'), ["class" => "form-control", "name" => "start_date", "placeholder" => "Select Start Date and Time" , "readonly" => "readonly"]) }}
                                     </div>
                                 </div>
                                 <div class="row">

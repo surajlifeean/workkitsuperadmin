@@ -25,7 +25,7 @@
                         <div class="row">
                             <div class="col-lg-6">
                                 <p>{{ __('Company Email:') }} {{ $company->email }}</p>
-                                <p>{{ __('Company Created:') }} {{ $company->created_at }}</p>
+                                <p>{{ __('Company Created:') }} {{ \Carbon\Carbon::parse($company->created_at)->timezone('Europe/Paris')->format('d/m/y H:i:s') }}</p>
                             </div>
                             <div class="col-lg-6">
                                 <div class="card" style="background-color:  transparent; box-shadow: unset;">
@@ -142,8 +142,8 @@
                                                     $plan_request->duration . ' months')
                                         }}
                                     </td>
-                                    <td>{{ $plan_request->start_date }}</td>
-                                    <td>{{ $plan_request->end_date }}</td>
+                                    <td>{{ $plan_request->start_date ? \Carbon\Carbon::parse($plan_request->start_date)->timezone('Europe/Paris')->format('d/m/y H:i:s') : '' }}</td>
+                                    <td>{{ $plan_request->start_date ? \Carbon\Carbon::parse($plan_request->end_date)->timezone('Europe/Paris')->format('d/m/y H:i:s') : '' }}</td>
                                     <td>
                                         {{ ucfirst($plan_request->status) }}
                                     </td>

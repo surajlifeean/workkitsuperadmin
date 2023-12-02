@@ -39,7 +39,7 @@ $set_seen = \App\Models\Notification::where('company_id', $notifications[0]->com
                 <div class="p-2 card" style="max-width: 80%;width: fit-content;min-width: 300px;">
                     <h4>{{ $notification->title }}</h4>
                     <p style="max-width: 100%; overflow-wrap: break-word">{{ $notification->message }}</p>
-                    <p style="font-size: 10px;" class="ml-auto">{{ $notification->created_at }}</p>
+                    <p style="font-size: 10px;" class="ml-auto">{{ \Carbon\Carbon::parse($notification->created_at)->timezone('Europe/Paris')->format('d/m/Y H:i:s') }}</p>
                 </div>
             </div>
             @else
@@ -47,7 +47,7 @@ $set_seen = \App\Models\Notification::where('company_id', $notifications[0]->com
                 <div class="p-2 ml-auto card" style="margin-left: auto;max-width: 90%;width: fit-content;min-width: 300px; background: #D9FDD3;">
                     <h4>{{ $notification->title }}</h4>
                     <p style="max-width: 100%; overflow-wrap: break-word">{{ $notification->message }}</p>
-                    <p style="font-size: 10px;" class="ml-auto">{{ $notification->created_at }}</p>
+                    <p style="font-size: 10px;" class="ml-auto">{{ \Carbon\Carbon::parse($notification->created_at)->timezone('Europe/Paris')->format('d/m/Y H:i:s') }}</p>
                 </div>
             </div>
             @endif
