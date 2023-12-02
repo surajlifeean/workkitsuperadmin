@@ -28,7 +28,7 @@ class SubscriptionPlanController extends Controller
     public function create()
     {
         if (\Auth::user()->can('Create Plan')) {
-            $currency = ['USD' => 'USD', 'EUR' => 'EUR', 'XOF' => 'XOF' , 'XAF' => 'XAF'];
+            $currency = ['USD' => 'USD', 'EUR' => 'EUR', 'XOF' => 'XOF', 'XAF' => 'XAF'];
             return view('plan.create1', compact('currency'));
         } else {
             return redirect()->back()->with('error', __('Permission denied.'));
@@ -60,7 +60,7 @@ class SubscriptionPlanController extends Controller
 
         if (\Auth::user()->can('Edit Plan')) {
             $plan  = SubscriptionPlan::find($id);
-            $currency = ['USD' => 'USD', 'EUR' => 'EUR', 'XOF' => 'XOF' , 'XAF' => 'XAF'];
+            $currency = ['USD' => 'USD', 'EUR' => 'EUR', 'XOF' => 'XOF', 'XAF' => 'XAF'];
             return view('plan.edit1', compact('plan', "currency"));
         } else {
             return redirect()->back()->with('error', __('Permission denied.'));
@@ -98,9 +98,20 @@ class SubscriptionPlanController extends Controller
         $plan->is_offer_price = $request->input('isOfferPrice');
         if ($plan->save()) {
             return response()->json(['success' => 'Offer price updated successfully']);
-        }else{
+        } else {
             return response()->json(['status' => '500']);
         }
+    }
 
+    public function destroy($id)
+    {
+        try {
+            $plan = SubscriptionPlan::findOrFail($id);
+            $plan->delete();
+
+            return response()->json(['success' => 'Subscription plan deleted successfully']);
+        } catch (\Exception $e) {
+            return response()->json(['error' => '500 Internal Server Error', 'message' => $e->getMessage()]);
+        }
     }
 }

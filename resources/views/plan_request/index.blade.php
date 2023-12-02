@@ -107,8 +107,8 @@
                                                     $plan_request->duration . ' months')
                                         }}
                                     </td>
-                                    <td>{{ $plan_request->start_date }}</td>
-                                    <td>{{ $plan_request->end_date }}</td>
+                                    <td>{{ $plan_request->start_date ? \Carbon\Carbon::parse($plan_request->start_date)->timezone('Europe/Paris')->format('d/m/y H:i:s') : '' }}</td>
+                                    <td>{{ $plan_request->end_date ? \Carbon\Carbon::parse($plan_request->end_date)->timezone('Europe/Paris')->format('d/m/y H:i:s') : '' }}</td>
                                     <td>
                                         {{ ucfirst($plan_request->status) }}
                                     </td>
